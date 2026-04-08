@@ -2,9 +2,13 @@
 
 Standalone captcha canvas challenge extracted from `pkc-js`, packaged with independent dependencies.
 
+## Security Warning
+
+This captcha can be brute-forced easily and should not be used to protect a real community.
+
 ## Status
 
-- Runtime peer dependency is currently `@pkcprotocol/pkc-js`.
+- `@pkcprotocol/pkc-js` is a dev dependency used only for TypeScript types. It is not required at runtime.
 
 ## Requirements
 
