@@ -7,7 +7,7 @@
     "tagName": "v${version}",
     "tagArgs": ["--force"]
   },
-  "npm": { "publish": false },
+  "npm": { "publish": true },
   "github": {
     "release": true,
     "releaseName": "v${version}"
