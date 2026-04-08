@@ -3,7 +3,7 @@ import type {
   ChallengeInput,
   ChallengeResultInput,
   GetChallengeArgsInput,
-  SubplebbitChallengeSetting
+  CommunityChallengeSetting
 } from "./types.js";
 import type { SetCaptchaOption } from "captcha-canvas/dist/constants.js";
 
@@ -71,7 +71,7 @@ const getChallenge = async ({ challengeSettings }: GetChallengeArgsInput): Promi
   return { challenge, verify, type, caseInsensitive: true };
 };
 
-function captchaCanvasChallenge({ challengeSettings }: { challengeSettings: SubplebbitChallengeSetting }): ChallengeFileInput {
+function captchaCanvasChallenge({ challengeSettings }: { challengeSettings: CommunityChallengeSetting }): ChallengeFileInput {
   return { getChallenge, optionInputs, type, description, caseInsensitive: true };
 }
 

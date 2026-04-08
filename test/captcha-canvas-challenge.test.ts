@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
 import captchaCanvasChallenge from "../src/captcha-canvas-challenge.js";
-import type { SubplebbitChallengeSetting } from "../src/types.js";
+import type { CommunityChallengeSetting } from "../src/types.js";
 
 describe("captchaCanvasChallenge", () => {
-  const emptyChallengeSettings = {} as { challengeSettings: SubplebbitChallengeSetting };
+  const emptyChallengeSettings = {} as { challengeSettings: CommunityChallengeSetting };
 
   it("factory returns a valid challenge file object", () => {
     const challengeFile = captchaCanvasChallenge(emptyChallengeSettings);
@@ -62,7 +62,7 @@ describe("captchaCanvasChallenge", () => {
           colors: "#ff0000,#00ff00"
         }
       }
-    } as { challengeSettings: SubplebbitChallengeSetting };
+    } as { challengeSettings: CommunityChallengeSetting };
 
     const challengeFile = captchaCanvasChallenge(customSettings);
     const getChallengeResult = await challengeFile.getChallenge({

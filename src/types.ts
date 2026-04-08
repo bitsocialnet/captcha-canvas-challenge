@@ -3,7 +3,5 @@ export type {
   ChallengeInput,
   ChallengeResultInput,
   GetChallengeArgsInput,
-  SubplebbitChallengeSetting,
-  ChallengeFileFactoryInput,
-  ChallengeFileFactoryArgs
-} from "@plebbit/plebbit-js/dist/node/subplebbit/types";
+  CommunityChallengeSetting
+} from "@pkc/pkc-js/challenges";

@@ -1,11 +1,10 @@
 # @bitsocial/captcha-canvas-challenge
 
-Standalone captcha canvas challenge extracted from `plebbit-js`, packaged with independent dependencies.
+Standalone captcha canvas challenge extracted from `pkc-js`, packaged with independent dependencies.
 
 ## Status
 
-- Runtime peer dependency is currently `@plebbit/plebbit-js`.
-- This package is expected to migrate to `@pkc/pkc-js` soon.
+- Runtime peer dependency is currently `@pkc/pkc-js`.
 
 ## Requirements
 
@@ -21,10 +20,10 @@ npm install @bitsocial/captcha-canvas-challenge
 ## Usage
 
 ```ts
-import Plebbit from "@plebbit/plebbit-js";
+import PKC from "@pkc/pkc-js";
 import { captchaCanvasChallenge } from "@bitsocial/captcha-canvas-challenge";
 
-Plebbit.challenges["captcha-canvas-v3"] = captchaCanvasChallenge;
+PKC.challenges["captcha-canvas-v3"] = captchaCanvasChallenge;
 ```
 
 ## Challenge Options
