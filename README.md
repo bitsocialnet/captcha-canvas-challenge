@@ -4,7 +4,7 @@ Standalone captcha canvas challenge extracted from `pkc-js`, packaged with indep
 
 ## Status
 
-- Runtime peer dependency is currently `@pkc/pkc-js`.
+- Runtime peer dependency is currently `@pkcprotocol/pkc-js`.
 
 ## Requirements
 
@@ -20,7 +20,7 @@ npm install @bitsocial/captcha-canvas-challenge
 ## Usage
 
 ```ts
-import PKC from "@pkc/pkc-js";
+import PKC from "@pkcprotocol/pkc-js";
 import { captchaCanvasChallenge } from "@bitsocial/captcha-canvas-challenge";
 
 PKC.challenges["captcha-canvas-v3"] = captchaCanvasChallenge;

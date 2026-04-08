@@ -45,7 +45,7 @@
   "devDependencies": {
     "@commitlint/cli": "20.4.3",
     "@commitlint/config-conventional": "20.4.3",
-    "@pkc/pkc-js": "https://github.com/pkcprotocol/pkc-js#542952a1a63211be218c31fe3dc256df2cdc6375",
+    "@pkcprotocol/pkc-js": "https://github.com/pkcprotocol/pkc-js#e63026e6cd33df5af3a3b5e6473b1e364d89fbdb",
     "@release-it/conventional-changelog": "10.0.5",
     "@types/node": "25.3.5",
     "commitizen": "4.3.1",

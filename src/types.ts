@@ -4,4 +4,4 @@ export type {
   ChallengeResultInput,
   GetChallengeArgsInput,
   CommunityChallengeSetting
-} from "@pkc/pkc-js/challenges";
+} from "@pkcprotocol/pkc-js/challenges";

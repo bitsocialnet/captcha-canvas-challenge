@@ -1,6 +1,6 @@
 # AGENTS Notes
 
-- Compatibility target: `@pkc/pkc-js`
+- Compatibility target: `@pkcprotocol/pkc-js`
 - This repo is ESM only and will only run in Node.js.
 - Everything in this repo should be fully typed, including tests.
 - Assume this repo will be ran in node v22+
