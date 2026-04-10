@@ -18,5 +18,5 @@
 ### Features
 
 * extract captcha-canvas-v3 challenge to standalone package ([57f3731](https://github.com/bitsocialnet/captcha-canvas-challenge/commit/57f373137b726dc1a339922c9a226b1b6da02f65))
-* migrate from @plebbit/plebbit-js to @pkc/pkc-js ([bbea2d0](https://github.com/bitsocialnet/captcha-canvas-challenge/commit/bbea2d02957fee5acb623ad51448017f22cc3186))
-* rename @pkc/pkc-js to @pkcprotocol/pkc-js and update to e63026e6 ([26be194](https://github.com/bitsocialnet/captcha-canvas-challenge/commit/26be19460ec7d08692c4bb544bda6b36cd7f52a5))
+* migrate from @plebbit/plebbit-js to @pkcprotocol/pkc-js ([bbea2d0](https://github.com/bitsocialnet/captcha-canvas-challenge/commit/bbea2d02957fee5acb623ad51448017f22cc3186))
+* rename @pkcprotocol/pkc-js to @pkcprotocol/pkc-js and update to e63026e6 ([26be194](https://github.com/bitsocialnet/captcha-canvas-challenge/commit/26be19460ec7d08692c4bb544bda6b36cd7f52a5))
