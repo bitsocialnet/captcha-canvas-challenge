@@ -36,6 +36,10 @@
     "captcha",
     "canvas"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitsocialnet/captcha-canvas-challenge.git"
+  },
   "author": "Rinse",
   "license": "GPL-3.0-only",
   "engines": {
