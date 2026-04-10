@@ -1,6 +1,6 @@
 {
   "name": "@bitsocial/captcha-canvas-challenge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Standalone captcha canvas challenge for pkc-js",
   "type": "module",
   "main": "./dist/index.js",
