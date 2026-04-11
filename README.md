@@ -19,6 +19,42 @@ This captcha can be brute-forced easily and should not be used to protect a real
 
 Community owners add the captcha-canvas challenge to their community settings. When enabled, every publication (post, reply, vote) requires the author to solve a captcha. The challenge is published as [`@bitsocial/captcha-canvas-challenge`](https://www.npmjs.com/package/@bitsocial/captcha-canvas-challenge) on npm.
 
+### With pkc-js over RPC
+
+If your RPC server is already running, first install the challenge on the server:
+
+```bash
+bitsocial challenge install @bitsocial/captcha-canvas-challenge
+```
+
+Then from your RPC client, connect and set the challenge on your community by name — no npm install or challenge registration needed on the client side:
+
+```ts
+import PKC from "@pkcprotocol/pkc-js";
+
+const pkc = await PKC({
+  pkcRpcClientsOptions: ["ws://localhost:9138"]
+});
+
+const community = await pkc.createCommunity({ address: "your-community-address.bso" });
+
+await community.edit({
+  settings: {
+    challenges: [
+      {
+        name: "captcha-canvas-v3",
+        options: {
+          characters: "6",
+          width: "300",
+          height: "100",
+          colors: "#32cf7e"
+        }
+      }
+    ]
+  }
+});
+```
+
 ### With pkc-js (TypeScript)
 
 Install the challenge package:
