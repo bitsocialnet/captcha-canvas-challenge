@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.1.4](https://github.com/bitsocialnet/captcha-canvas-challenge/compare/v0.1.3...v0.1.4) (2026-04-11)
+
 ## [0.1.3](https://github.com/bitsocialnet/captcha-canvas-challenge/compare/v0.1.2...v0.1.3) (2026-04-10)
 
 ### Bug Fixes
