@@ -19,6 +19,8 @@ This captcha can be brute-forced easily and should not be used to protect a real
 
 Community owners add the captcha-canvas challenge to their community settings. When enabled, every publication (post, reply, vote) requires the author to solve a captcha. The challenge is published as [`@bitsocial/captcha-canvas-challenge`](https://www.npmjs.com/package/@bitsocial/captcha-canvas-challenge) on npm.
 
+The challenge name is the npm package name, `@bitsocial/captcha-canvas-challenge`, on every install path — that's the key in `PKC.challenges` and the value passed as `community.settings.challenges[].name`. `bitsocial challenge install` registers it this way automatically; manual registration should match.
+
 ### With pkc-js over RPC
 
 If your RPC server is already running, first install the challenge on the server:
@@ -42,7 +44,7 @@ await community.edit({
   settings: {
     challenges: [
       {
-        name: "captcha-canvas-v3",
+        name: "@bitsocial/captcha-canvas-challenge",
         options: {
           characters: "6",
           width: "300",
@@ -70,7 +72,7 @@ import PKC from '@pkcprotocol/pkc-js'
 import { captchaCanvasChallenge } from '@bitsocial/captcha-canvas-challenge'
 
 // Register the challenge so it can be referenced by name
-PKC.challenges['captcha-canvas-v3'] = captchaCanvasChallenge
+PKC.challenges['@bitsocial/captcha-canvas-challenge'] = captchaCanvasChallenge
 
 const pkc = await PKC({ /* your pkc options */ })
 const community = await pkc.createCommunity({ address: 'your-community.bso' })
@@ -78,7 +80,7 @@ const community = await pkc.createCommunity({ address: 'your-community.bso' })
 await community.edit({
   settings: {
     challenges: [{
-      name: 'captcha-canvas-v3',
+      name: '@bitsocial/captcha-canvas-challenge',
       options: {
         characters: '6',
         width: '300',
@@ -113,7 +115,7 @@ Edit your community to use the challenge:
 
 ```bash
 bitsocial community edit your-community.bso \
-  '--settings.challenges[0].name' captcha-canvas-v3 \
+  '--settings.challenges[0].name' @bitsocial/captcha-canvas-challenge \
   '--settings.challenges[0].options.characters' '6' \
   '--settings.challenges[0].options.width' '300' \
   '--settings.challenges[0].options.height' '100' \

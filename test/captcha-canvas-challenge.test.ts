@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import captchaCanvasChallenge from "../src/captcha-canvas-challenge.js";
 import type { CommunityChallengeSetting } from "../src/types.js";
+import { name as packageName } from "../package.json" with { type: "json" };
 
 describe("captchaCanvasChallenge", () => {
   const emptyChallengeSettings = {} as { challengeSettings: CommunityChallengeSetting };
@@ -71,5 +72,16 @@ describe("captchaCanvasChallenge", () => {
     const { challenge } = getChallengeResult as { challenge: string };
     expect(typeof challenge).to.equal("string");
     expect(challenge.length).toBeGreaterThan(0);
+  });
+});
+
+describe("registration under the package name", () => {
+  it("default export is the factory (what bitsocial-cli's loader picks up)", async () => {
+    const mod = await import("../src/index.js");
+    expect(mod.default).to.equal(captchaCanvasChallenge);
+  });
+
+  it("package.json name matches the documented challenge name", () => {
+    expect(packageName).to.equal("@bitsocial/captcha-canvas-challenge");
   });
 });
