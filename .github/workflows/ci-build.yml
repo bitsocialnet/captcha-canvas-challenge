@@ -4,6 +4,10 @@ on:
     workflows: ["CI"]
     types: ["completed"]
     branches: [master]
+# One release at a time; never cancel a release that is already tagging or publishing.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
 jobs:
   on-success:
     runs-on: ubuntu-latest
@@ -33,7 +37,7 @@ jobs:
       - name: Run release-it
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run release -- --ci || true
+        run: npm run release -- --ci
       - name: Check if released
         id: release
         run: |
