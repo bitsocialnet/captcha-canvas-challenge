@@ -5,9 +5,12 @@ on:
     types: ["completed"]
     branches: [master]
 # One release at a time; never cancel a release that is already tagging or publishing.
+# queue: max keeps every waiting run instead of replacing the pending one, so a run for a failed,
+# stale or pull_request CI run cannot cancel the release of the current master tip.
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
+  queue: max
 jobs:
   on-success:
     runs-on: ubuntu-latest
