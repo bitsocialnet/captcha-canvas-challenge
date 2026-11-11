@@ -20,26 +20,38 @@ jobs:
         with:
           ref: master
           fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
       # Release only the commit CI passed for. If master moved on, CI for the new tip triggers the release.
       - name: Check that master is the commit CI verified
         id: head
         env:
           VERIFIED_SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
-          if [ "$(git rev-parse HEAD)" = "$VERIFIED_SHA" ]; then
-            echo "verified=true" >> "$GITHUB_OUTPUT"
-          elif [ "$(git rev-parse -q --verify HEAD^)" = "$VERIFIED_SHA" ] && [ -n "$(git tag --points-at HEAD 'v*')" ]; then
-            # Re-run after a failed publish: HEAD is the tagged release commit made on top of the verified commit.
+          # A re-run after a failed publish finds the release commit release-it made on top of the
+          # verified commit. Accept it only if it is tagged v<version> and changes nothing but
+          # CHANGELOG.md and the package.json version, so the published tree is the verified one.
+          is_release_commit_of_verified() {
+            [ "$(git rev-parse -q --verify HEAD^)" = "$VERIFIED_SHA" ] || return 1
+            VERSION=$(node -p "require('./package.json').version")
+            [ -n "$(git tag --points-at HEAD "v$VERSION")" ] || return 1
+            [ -z "$(git diff --name-only HEAD^ HEAD -- . ':!CHANGELOG.md' ':!package.json')" ] || return 1
+            node -e '
+              const [before, after] = process.argv.slice(1).map((s) => JSON.parse(s));
+              delete before.version;
+              delete after.version;
+              process.exit(JSON.stringify(before) === JSON.stringify(after) ? 0 : 1);
+            ' "$(git show HEAD^:package.json)" "$(git show HEAD:package.json)"
+          }
+          if [ "$(git rev-parse HEAD)" = "$VERIFIED_SHA" ] || is_release_commit_of_verified; then
             echo "verified=true" >> "$GITHUB_OUTPUT"
           else
-            echo "master is at $(git rev-parse HEAD), not $VERIFIED_SHA; skipping the release"
+            echo "master is at $(git rev-parse HEAD), not $VERIFIED_SHA or its release commit; skipping the release"
             echo "verified=false" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'npm'
-          registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm run build
       - name: Set up Git commit author
