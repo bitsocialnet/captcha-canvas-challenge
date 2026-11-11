@@ -4,10 +4,17 @@ on:
     workflows: ["CI"]
     types: ["completed"]
     branches: [master]
+# One release at a time; never cancel a release that is already tagging or publishing.
+# queue: max keeps every waiting run instead of replacing the pending one, so a run for a failed,
+# stale or pull_request CI run cannot cancel the release of the current master tip.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+  queue: max
 jobs:
   on-success:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
     permissions:
       contents: write
       id-token: write
@@ -21,29 +28,68 @@ jobs:
           node-version: 22
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
-      - run: npm run build
+      # Release only the commit CI passed for. If master moved on, CI for the new tip triggers the release.
+      - name: Check that master is the commit CI verified
+        id: head
+        env:
+          VERIFIED_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          # A re-run after a failed publish finds the release commit release-it made on top of the
+          # verified commit. Accept it only if it is tagged v<version> and changes nothing but
+          # CHANGELOG.md and the package.json version, so the published tree is the verified one.
+          is_release_commit_of_verified() {
+            [ "$(git rev-parse -q --verify HEAD^)" = "$VERIFIED_SHA" ] || return 1
+            VERSION=$(node -p "require('./package.json').version")
+            [ -n "$(git tag --points-at HEAD "v$VERSION")" ] || return 1
+            [ -z "$(git diff --name-only HEAD^ HEAD -- . ':!CHANGELOG.md' ':!package.json')" ] || return 1
+            node -e '
+              const [before, after] = process.argv.slice(1).map((s) => JSON.parse(s));
+              delete before.version;
+              delete after.version;
+              process.exit(JSON.stringify(before) === JSON.stringify(after) ? 0 : 1);
+            ' "$(git show HEAD^:package.json)" "$(git show HEAD:package.json)"
+          }
+          if [ "$(git rev-parse HEAD)" = "$VERIFIED_SHA" ] || is_release_commit_of_verified; then
+            echo "verified=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "master is at $(git rev-parse HEAD), not $VERIFIED_SHA or its release commit; skipping the release"
+            echo "verified=false" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.head.outputs.verified == 'true'
+        run: npm ci
+      - if: steps.head.outputs.verified == 'true'
+        run: npm run build
       - name: Set up Git commit author
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-      - name: Get current version
-        id: before
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
       - name: Run release-it
+        if: steps.head.outputs.verified == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run release -- --ci || true
-      - name: Check if released
+        run: npm run release -- --ci
+      # Decide from the tag and the registry, not from a package.json diff in this run, so a re-run
+      # publishes a version that was tagged but whose publish failed.
+      - name: Check if this version needs publishing
         id: release
+        if: steps.head.outputs.verified == 'true'
         run: |
-          AFTER=$(node -p "require('./package.json').version")
-          if [ "${{ steps.before.outputs.version }}" != "$AFTER" ]; then
-            echo "Released v$AFTER"
-            echo "released=true" >> $GITHUB_OUTPUT
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          if [ -z "$(git tag --points-at HEAD "v$VERSION")" ]; then
+            echo "HEAD is not tagged v$VERSION; nothing to publish"
+            echo "released=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # A failed lookup fails the step instead of counting as "not published".
+          PUBLISHED=$(npm view "$NAME" versions --json --prefer-online)
+          ON_NPM=$(node -p "[].concat(JSON.parse(process.argv[1])).includes(process.argv[2])" "$PUBLISHED" "$VERSION")
+          if [ "$ON_NPM" = true ]; then
+            echo "$NAME@$VERSION is already on npm"
+            echo "released=false" >> "$GITHUB_OUTPUT"
           else
-            echo "No new version to release"
-            echo "released=false" >> $GITHUB_OUTPUT
+            echo "Publishing $NAME@$VERSION"
+            echo "released=true" >> "$GITHUB_OUTPUT"
           fi
       - name: Publish to npm
         if: steps.release.outputs.released == 'true'
