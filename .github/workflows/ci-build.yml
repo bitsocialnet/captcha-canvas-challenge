@@ -52,8 +52,10 @@ jobs:
             echo "master is at $(git rev-parse HEAD), not $VERIFIED_SHA or its release commit; skipping the release"
             echo "verified=false" >> "$GITHUB_OUTPUT"
           fi
-      - run: npm ci
-      - run: npm run build
+      - if: steps.head.outputs.verified == 'true'
+        run: npm ci
+      - if: steps.head.outputs.verified == 'true'
+        run: npm run build
       - name: Set up Git commit author
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
