@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.6](https://github.com/bitsocialnet/captcha-canvas-challenge/compare/v0.1.5...v0.1.6) (2026-11-26)
+
+### Bug Fixes
+
+* **deps:** upgrade @pkcprotocol/pkc-js to 0.0.163 from npm ([#4](https://github.com/bitsocialnet/captcha-canvas-challenge/issues/4)) ([1a02445](https://github.com/bitsocialnet/captcha-canvas-challenge/commit/1a02445912263339430c5102a6ee1e52287023de))
+
 ## [0.1.5](https://github.com/bitsocialnet/captcha-canvas-challenge/compare/v0.1.4...v0.1.5) (2026-04-24)
 
 ## [0.1.4](https://github.com/bitsocialnet/captcha-canvas-challenge/compare/v0.1.3...v0.1.4) (2026-04-11)
